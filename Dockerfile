@@ -1,4 +1,4 @@
 FROM openjdk:20
 COPY ./target/classes/com /tmp/com
-WORKDIR /tmp    doc
+WORKDIR /tmp
 ENTRYPOINT ["java", "com.napier.sem.App"]
