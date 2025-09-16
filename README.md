@@ -4,4 +4,8 @@
 
 **Just adding a few things**
 
-[![Boo Yah App](https://github.com/phonemyat-4116/simProj/actions/workflows/main.yml/badge.svg?event=push)](https://github.com/phonemyat-4116/simProj/actions/workflows/main.yml)
+![Build](https://img.shields.io/github/actions/workflow/status/phonemyat-4116/simProj/main.yml?branch=main&label=build)
+
+[![LICENSE](https://img.shields.io/github/license/phonemyat-4116/simProj.svg?style=flat-square)](https://github.com/phonemyat-4116/simProj/blob/main/LICENSE)
+
+[![Releases](https://img.shields.io/github/v/release/phonemyat-4116/simProj?style=flat-square)](https://github.com/phonemyat-4116/simProj/releases)
