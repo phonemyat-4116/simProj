@@ -30,7 +30,7 @@ jobs:
         run: docker build -t sim-proj .
 
       - name: Run image
-        run: docker run -d --name semcontainer --network simProj sim-proj
+        run: docker run --rm --name semcontainer --network simProj sim-proj
 
       - name: view logs
         run: docker logs semcontainer
