@@ -10,7 +10,7 @@ public class App {
     public static void main(String[] args)
     {
         MongoDatabase database;
-        try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017")) {
+        try (MongoClient mongoClient = MongoClients.create("mongodb://mongodb-server:27017")) {
             database = mongoClient.getDatabase("db");
 
             MongoCollection<Document> collection = database.getCollection("test");

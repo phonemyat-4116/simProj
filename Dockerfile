@@ -1,5 +1,5 @@
 FROM openjdk:21
-COPY ./target/classes/com /tmp/com
+COPY ./target/simProj-1.0-SNAPSHOT-jar-with-dependencies.jar /tmp
 WORKDIR /tmp
-ENTRYPOINT ["java", "com.napier.sem.App"]
+ENTRYPOINT ["java", "-jar", "simProj-1.0-SNAPSHOT-jar-with-dependencies.jar"]
 
