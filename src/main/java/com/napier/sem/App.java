@@ -35,6 +35,7 @@ public class App {
 package com.napier.sem;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class App {
 
@@ -167,6 +168,41 @@ public class App {
         }
     }
 
+    public ArrayList<Employee> getAllSalaries(){
+
+        try{
+            // Create an SQL statement
+            Statement stmt = con.createStatement();
+            // Create String for SQL statement
+            String strSelect =
+                    "SELECT employees.emp_no, employees.first_name, employees.last_name, salaries.salary "
+                            + "FROM employees, salaries "
+                            + "WHERE employees.emp_no = salaries.emp_no AND salaries.to_date = '9999-01-01' "
+                            + "ORDER BY employees.emp_no ASC";
+            // Execute SQL Statement
+            ResultSet rset = stmt.executeQuery(strSelect);
+            // Extract employee information
+            ArrayList<Employee> employees = new ArrayList<Employee>();
+            while(rset.next())
+            {
+                Employee emp = new Employee();
+                emp.emp_no = rset.getInt("employees.emp_no");
+                emp.first_name = rset.getString("employees.first_name");
+                emp.last_name = rset.getString("employees.last_name");
+                emp.salary = rset.getInt("salaries.salary");
+                employees.add(emp);
+            }
+            return employees;
+
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+            System.out.println("Failed to get salary details");
+            return null;
+        }
+
+    }
+
     public static void main(String[] args)
     {
         // Create new Application
@@ -178,6 +214,7 @@ public class App {
         // Get Employee
         Employee emp = a.getEmployee(255530);
 
+        /*
         // Check if employee was found
         if (emp == null) {
             System.out.println("Employee " + emp.emp_no + " is not found in database!");
@@ -187,6 +224,11 @@ public class App {
 
         // Display results
         a.displayEmployee(emp);
+         */
+        ArrayList<Employee> employees = a.getAllSalaries();
+
+        // Test the size of the returned data - should be 240124
+        System.out.println(employees.size());
 
         // Disconnect from database
         a.disconnect();
