@@ -49,7 +49,7 @@ jobs:
           directory: ./target/site/jacoco
           flags: Integration Tests # optional
           verbose: true # optional (default = false)
-          slug: phonemyat-4116 / simProj
+          slug: phonemyat-4116/simProj
     
 
   build:
