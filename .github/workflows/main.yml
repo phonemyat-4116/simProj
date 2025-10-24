@@ -42,6 +42,14 @@ jobs:
           docker stop employees
           docker rm employees
           docker image rm database
+      - name: CodeCov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} # now required for public repos too
+          directory: ./target/site/jacoco
+          flags: Integration Tests # optional
+          verbose: true # optional (default = false)
+          slug: phonemyat-4116 / simProj
     
 
   build:
