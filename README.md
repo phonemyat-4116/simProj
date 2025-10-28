@@ -14,3 +14,4 @@ License [![LICENSE](https://img.shields.io/github/license/phonemyat-4116/simProj
 
 Release [![Releases](https://img.shields.io/github/release/phonemyat-4116/simProj/all.svg?style=flat-square)](https://github.com/phonemyat-4116/simProj/releases)
 
+Code Coverage [![codecov](https://codecov.io/gh/phonemyat-4116/simProj/graph/badge.svg?token=P1AWJS1QK7)](https://codecov.io/gh/phonemyat-4116/simProj)
