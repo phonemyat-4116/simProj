@@ -2,7 +2,7 @@ name: A workflow for employee report
 on:
   push:
     branches:
-      - master
+      - main
       - develop
 jobs:
   UnitTests:
