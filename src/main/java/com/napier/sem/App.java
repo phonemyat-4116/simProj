@@ -397,7 +397,7 @@ public class App {
     public ArrayList<Employee> getSalariesByRole(String role)
     {
         String sql = "SELECT employees.emp_no, employees.first_name, employees.last_name, " +
-                "titles.title, salaries.salary, departments.dept_name, dept_manager.emp_no " +
+                "titles.title, salaries.salary, departments.dept_name, dept_manager.emp_no AS mgr_no " +
                 "FROM employees, salaries, titles, departments, dept_emp, dept_manager " +
                 "WHERE employees.emp_no = salaries.emp_no " +
                 "  AND salaries.to_date = '9999-01-01' " +
@@ -408,7 +408,7 @@ public class App {
                 "  AND departments.dept_no = dept_emp.dept_no " +
                 "  AND dept_manager.dept_no = dept_emp.dept_no " +
                 "  AND dept_manager.to_date = '9999-01-01' " +
-                "  AND titles.title = " + role;
+                "  AND titles.title = ?";
 
         ArrayList<Employee> employees = new ArrayList<>();
 
@@ -423,8 +423,15 @@ public class App {
                     emp.last_name = rs.getString("last_name");
                     emp.title = rs.getString("title");
                     emp.salary = rs.getInt("salary");
-                    emp.dept.dept_name = rs.getString("dept_name");
-                    emp.manager.emp_no = rs.getInt("emp_no");
+
+                    Department dept = new Department();
+                    dept.dept_name = rs.getString("dept_name");
+                    emp.dept = dept;
+
+                    Employee manager = new Employee();
+                    manager.emp_no = rs.getInt("mgr_no");
+                    emp.manager = manager;
+
                     employees.add(emp);
 
                 }
@@ -458,7 +465,7 @@ public class App {
             sb.append("| " + emp.emp_no + " | " +
                     emp.first_name + " | " + emp.last_name + " | " +
                     emp.title + " | " + emp.salary + " | "
-                    + emp.dept.dept_name + " | " + emp.manager + " |\r\n");
+                    + emp.dept.dept_name + " | " + emp.manager.emp_no + " |\r\n");
         }
         try {
             new File("./reports/").mkdir();
