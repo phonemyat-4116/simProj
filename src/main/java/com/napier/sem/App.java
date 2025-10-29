@@ -34,6 +34,10 @@ public class App {
 
 package com.napier.sem;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -390,6 +394,82 @@ public class App {
         }
     }
 
+    public ArrayList<Employee> getSalariesByRole(String role)
+    {
+        String sql = "SELECT employees.emp_no, employees.first_name, employees.last_name, " +
+                "titles.title, salaries.salary, departments.dept_name, dept_manager.emp_no " +
+                "FROM employees, salaries, titles, departments, dept_emp, dept_manager " +
+                "WHERE employees.emp_no = salaries.emp_no " +
+                "  AND salaries.to_date = '9999-01-01' " +
+                "  AND titles.emp_no = employees.emp_no " +
+                "  AND titles.to_date = '9999-01-01' " +
+                "  AND dept_emp.emp_no = employees.emp_no " +
+                "  AND dept_emp.to_date = '9999-01-01' " +
+                "  AND departments.dept_no = dept_emp.dept_no " +
+                "  AND dept_manager.dept_no = dept_emp.dept_no " +
+                "  AND dept_manager.to_date = '9999-01-01' " +
+                "  AND titles.title = " + role;
+
+        ArrayList<Employee> employees = new ArrayList<>();
+
+        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+            pstmt.setString(1, role);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Employee emp = new Employee();
+                    emp.emp_no = rs.getInt("emp_no");
+                    emp.first_name = rs.getString("first_name");
+                    emp.last_name = rs.getString("last_name");
+                    emp.title = rs.getString("title");
+                    emp.salary = rs.getInt("salary");
+                    emp.dept.dept_name = rs.getString("dept_name");
+                    emp.manager.emp_no = rs.getInt("emp_no");
+                    employees.add(emp);
+
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Failed to get salary by role: " + e.getMessage());
+        }
+
+        return employees;
+    }
+
+    /**
+     * Outputs to Markdown
+     *
+     * @param employees
+     */
+    public void outputEmployees(ArrayList<Employee> employees, String filename) {
+        // Check employees is not null
+        if (employees == null) {
+            System.out.println("No employees");
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        // Print header
+        sb.append("| Emp No | First Name | Last Name | Title | Salary | Department | Manager |\r\n");
+        sb.append("| --- | --- | --- | --- | --- | --- | --- |\r\n");
+        // Loop over all employees in the list
+        for (Employee emp : employees) {
+            if (emp == null) continue;
+            sb.append("| " + emp.emp_no + " | " +
+                    emp.first_name + " | " + emp.last_name + " | " +
+                    emp.title + " | " + emp.salary + " | "
+                    + emp.dept.dept_name + " | " + emp.manager + " |\r\n");
+        }
+        try {
+            new File("./reports/").mkdir();
+            BufferedWriter writer = new BufferedWriter(new FileWriter(new File("./reports/" + filename)));
+            writer.write(sb.toString());
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         // Create new Application
         App a = new App();
@@ -424,10 +504,13 @@ public class App {
 
 //        a.printSalaries(employees);
 
-        Department dept = a.getDepartment("d002");
+//        Department dept = a.getDepartment("d002");
+//
+//        ArrayList<Employee> salariesByDepartment = a.getSalariesByDepartment(dept);
+//        a.printSalaries(salariesByDepartment);
 
-        ArrayList<Employee> salariesByDepartment = a.getSalariesByDepartment(dept);
-        a.printSalaries(salariesByDepartment);
+        ArrayList<Employee> employees = a.getSalariesByRole("Manager");
+        a.outputEmployees(employees, "ManagerSalaries.md");
 
         // Disconnect from database
         a.disconnect();
