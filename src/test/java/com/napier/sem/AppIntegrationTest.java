@@ -111,6 +111,28 @@ public class AppIntegrationTest
         app.printSalaries(salariesByDepartment);
     }
 
+    @Test
+    void testAddEmployee()
+    {
+        Employee emp = new Employee();
+
+        // Delete if exists first
+        try {
+            app.deleteEmployee(500000); // You'll need to implement this method
+        } catch (Exception e) {
+            // Ignore if doesn't exist
+        }
+
+        emp.emp_no = 500000;
+        emp.first_name = "Kevin";
+        emp.last_name = "Chalmers";
+        app.addEmployee(emp);
+        emp = app.getEmployee(500000);
+        assertEquals(emp.emp_no, 500000);
+        assertEquals(emp.first_name, "Kevin");
+        assertEquals(emp.last_name, "Chalmers");
+    }
+
 
 
 

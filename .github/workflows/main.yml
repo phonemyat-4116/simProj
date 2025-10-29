@@ -20,6 +20,13 @@ jobs:
           distribution: temurin
       - name: Unit Tests
         run: mvn -Dtest=com.napier.sem.AppTest test
+      - name: CodeCov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }} # now required for public repos
+          directory: ./target/site/jacoco
+          flags: Unit Tests # optional
+          verbose: true # optional (default = false)
 
   IntegrationTests:
     name: Integration Tests
@@ -65,16 +72,36 @@ jobs:
         with:
           java-version: '20'
           distribution: temurin
-      - name: Build with Maven
-        run: mvn package -DskipTests
-      - name: Install Docker Compose
-        run: >
-          sudo curl -L
-          "https://github.com/docker/compose/releases/download/v2.21.0/docker-compose-$(uname
-          -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-
+      - name: Package and Run docker compose
+        run: |
+          mvn package -DskipTests
+          
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.21.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
-
           docker-compose --version
-      - name: Run docker compose
-        run: docker-compose up --abort-on-container-exit --exit-code-from app
+          
+          docker-compose up --abort-on-container-exit
+      - name: Create GitHub Release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          automatic_release_tag: "latest"
+          files: |
+            ./target/*.jar
+
+
+#      - name: Build with Maven
+#        run: mvn package -DskipTests
+#      - name: Install Docker Compose
+#        run: >
+#          sudo curl -L
+#          "https://github.com/docker/compose/releases/download/v2.21.0/docker-compose-$(uname
+#          -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+#
+#          sudo chmod +x /usr/local/bin/docker-compose
+#
+#          docker-compose --version
+#      - name: Run docker compose
+#        run: docker-compose up --abort-on-container-exit --exit-code-from app
+
