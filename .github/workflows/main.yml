@@ -1,4 +1,4 @@
-name: A workflow for employee report
+name: A workflow for employee reports
 on:
   push:
     branches:
